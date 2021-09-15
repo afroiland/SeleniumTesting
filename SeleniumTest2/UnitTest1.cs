@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
 using System;
 using System.Threading;
 
@@ -23,6 +24,7 @@ namespace SeleniumTest2
             //driver.Navigate().GoToUrl("http://localhost:3000/");
 
             driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(40);
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(20);
             driver.Manage().Window.Maximize();
 
             IWebElement lnkLogin = driver.FindElement(By.Id("loginLink"));
@@ -35,8 +37,8 @@ namespace SeleniumTest2
             var hostingLink = driver.FindElement(By.PartialLinkText("hosting by"));
             var rememberBox = driver.FindElement(By.XPath("//input[@name='RememberMe']"));
             var chkboxByCSS = driver.FindElement(By.CssSelector("#RememberMe"));
-            //var loginByCSS = driver.FindElement(By.CssSelector(".btn.btn-default"));
-            var loginByCSS = driver.FindElement(By.CssSelector("input[class*='efault']"));
+            var loginByCSS1 = driver.FindElement(By.CssSelector(".btn.btn-default"));
+            var loginByCSS2 = driver.FindElement(By.CssSelector("input[class*='efault']"));
 
             Assert.That(txtUserName.Displayed, Is.True);
             Assert.That(txtPassword.Displayed, Is.True);
@@ -45,17 +47,38 @@ namespace SeleniumTest2
             Assert.That(hostingLink.Displayed, Is.True);
             Assert.That(rememberBox.Displayed, Is.True);
             Assert.That(chkboxByCSS.Displayed, Is.True);
-            Assert.That(loginByCSS.Displayed, Is.True);
+            Assert.That(loginByCSS1.Displayed, Is.True);
+            Assert.That(loginByCSS2.Displayed, Is.True);
 
             txtUserName.SendKeys("admin");
-            txtPassword.SendKeys("password");
+            //txtPassword.SendKeys("password");
+            TimeSpan tspan = new TimeSpan(0, 0, 30);
+            SendKeys((ChromeDriver)driver, "Password", tspan, "password");
+            Thread.Sleep(2000);
             rememberBox.Click();
             Thread.Sleep(1000);
             rememberBox.Click();
             Thread.Sleep(2000);
-            loginByCSS.Click();
+            loginByCSS1.Click();
             Thread.Sleep(2000);
             driver.Close();
+        }
+
+        public static void SendKeys(ChromeDriver driver, string id, TimeSpan timeout, string value)
+        {
+            new WebDriverWait(driver, timeout).Until(condition =>
+            {
+                try
+                {
+                    var elementToBeDisplayed = driver.FindElement(By.Id(id));
+                    return elementToBeDisplayed.Displayed;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            });
+            driver.FindElement(By.Id(id)).SendKeys(value);
         }
     }
 }
