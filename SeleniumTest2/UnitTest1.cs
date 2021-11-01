@@ -64,6 +64,24 @@ namespace SeleniumTest2
             driver.Close();
         }
 
+        [Test]
+        public void Test2()
+        {
+            IWebDriver driver = new ChromeDriver();
+            driver.Navigate().GoToUrl("https://testpages.herokuapp.com/styled/alerts/alert-test.html");
+            driver.Manage().Window.Maximize();
+
+            driver.FindElement(By.Id("alertexamples")).Click();
+            String alertMessage = driver.SwitchTo().Alert().Text;
+            Thread.Sleep(1000);
+            driver.SwitchTo().Alert().Accept();
+
+            //confirm box
+
+            //prompt box
+
+        }
+
         public static void SendKeysWithWait(ChromeDriver driver, string id, TimeSpan timeout, string value)
         {
             new WebDriverWait(driver, timeout).Until(condition =>
