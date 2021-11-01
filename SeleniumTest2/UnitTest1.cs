@@ -52,19 +52,19 @@ namespace SeleniumTest2
 
             txtUserName.SendKeys("admin");
             //txtPassword.SendKeys("password");
-            TimeSpan tspan = new TimeSpan(0, 0, 30);
-            SendKeys((ChromeDriver)driver, "Password", tspan, "password");
-            Thread.Sleep(2000);
+            TimeSpan tspan = new TimeSpan(0, 0, 10);
+            SendKeysWithWait((ChromeDriver)driver, "Password", tspan, "password");
+            Thread.Sleep(1000);
             rememberBox.Click();
             Thread.Sleep(1000);
             rememberBox.Click();
-            Thread.Sleep(2000);
+            Thread.Sleep(1000);
             loginByCSS1.Click();
-            Thread.Sleep(2000);
+            Thread.Sleep(1000);
             driver.Close();
         }
 
-        public static void SendKeys(ChromeDriver driver, string id, TimeSpan timeout, string value)
+        public static void SendKeysWithWait(ChromeDriver driver, string id, TimeSpan timeout, string value)
         {
             new WebDriverWait(driver, timeout).Until(condition =>
             {
@@ -72,6 +72,8 @@ namespace SeleniumTest2
                 {
                     var elementToBeDisplayed = driver.FindElement(By.Id(id));
                     return elementToBeDisplayed.Displayed;
+                    //or we can use SeleniumExtras.WaitHelpers
+                    //return SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(elementToBeDisplayed);
                 }
                 catch (Exception)
                 {
