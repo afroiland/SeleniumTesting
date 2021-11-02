@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.Events;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Threading;
@@ -84,27 +85,27 @@ namespace SeleniumTest2
             driver.FindElement(By.Id("promptexample")).Click();
             String promptMessage = driver.SwitchTo().Alert().Text;
             Thread.Sleep(1000);
-            //driver.SwitchTo().Alert().SendKeys("sendKeys test");
             var promptBox = driver.SwitchTo().Alert();
             promptBox.SendKeys("sendKeys test");
             Thread.Sleep(1000);
             driver.SwitchTo().Alert().Accept();
+            driver.Close();
 
             Assert.AreEqual(alertMessage, "I am an alert box!");
             Assert.AreEqual(confirmMessage, "I am a confirm alert");
             Assert.AreEqual(promptMessage, "I prompt you");
         }
 
-        //[Test]
-        //public void Test3()
-        //{
-        //    IWebDriver driver = new ChromeDriver();
-        //    driver.Navigate().GoToUrl("http://the-internet.herokuapp.com/javascript_alerts");
+        [Test]
+        public void Test3()
+        {
+            IWebDriver driver = new ChromeDriver();
+            EventFiringWebDriver eventFiringWebDriver = new EventFiringWebDriver(driver);
 
-        //    driver.FindElement(By.CssSelector("button[onclick='jsPrompt()']")).Click();
-        //    driver.SwitchTo().Alert().SendKeys("sendKeys test");
-        //    Thread.Sleep(2000);
-        //}
+            eventFiringWebDriver.Navigate().GoToUrl("https://testpages.herokuapp.com/styled/alerts/alert-test.html");
+            eventFiringWebDriver.Manage().Window.Maximize();
+
+        }
 
         public static void SendKeysWithWait(ChromeDriver driver, string id, TimeSpan timeout, string value)
         {
