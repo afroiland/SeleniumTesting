@@ -105,6 +105,23 @@ namespace SeleniumTest2
             eventFiringWebDriver.Navigate().GoToUrl("https://testpages.herokuapp.com/styled/alerts/alert-test.html");
             eventFiringWebDriver.Manage().Window.Maximize();
 
+            eventFiringWebDriver.ElementClicking += EventFiringWebDriver_ElementClicking;
+            eventFiringWebDriver.ElementClicked += EventFiringWebDriver_ElementClicked;
+
+            eventFiringWebDriver.FindElement(By.Id("alertexamples")).Click();
+            eventFiringWebDriver.SwitchTo().Alert().Accept();
+            eventFiringWebDriver.Close();
+        }
+
+        private void EventFiringWebDriver_ElementClicking(object sender, WebElementEventArgs e)
+        {
+            Console.WriteLine("Element clicking");
+            Console.WriteLine($"e.Element.Location: {e.Element.Location}");
+        }
+
+        private void EventFiringWebDriver_ElementClicked(object sender, WebElementEventArgs e)
+        {
+            Console.WriteLine("Element clicked");
         }
 
         public static void SendKeysWithWait(ChromeDriver driver, string id, TimeSpan timeout, string value)
