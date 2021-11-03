@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.Events;
 using OpenQA.Selenium.Support.UI;
 using System;
@@ -65,6 +66,25 @@ namespace SeleniumTest2
             driver.Close();
         }
 
+        public static void SendKeysWithWait(ChromeDriver driver, string id, TimeSpan timeout, string value)
+        {
+            new WebDriverWait(driver, timeout).Until(condition =>
+            {
+                try
+                {
+                    var elementToBeDisplayed = driver.FindElement(By.Id(id));
+                    return elementToBeDisplayed.Displayed;
+                    //or we can use SeleniumExtras.WaitHelpers
+                    //return SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(elementToBeDisplayed);
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            });
+            driver.FindElement(By.Id(id)).SendKeys(value);
+        }
+
         [Test]
         public void Test2()
         {
@@ -124,23 +144,17 @@ namespace SeleniumTest2
             Console.WriteLine("Element clicked");
         }
 
-        public static void SendKeysWithWait(ChromeDriver driver, string id, TimeSpan timeout, string value)
+        [Test]
+        public void Test4()
         {
-            new WebDriverWait(driver, timeout).Until(condition =>
-            {
-                try
-                {
-                    var elementToBeDisplayed = driver.FindElement(By.Id(id));
-                    return elementToBeDisplayed.Displayed;
-                    //or we can use SeleniumExtras.WaitHelpers
-                    //return SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(elementToBeDisplayed);
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
-            });
-            driver.FindElement(By.Id(id)).SendKeys(value);
+            IWebDriver driver = new ChromeDriver();
+            driver.Navigate().GoToUrl("http://uitestpractice.com/Students/Actions");
+
+            Actions actions = new Actions(driver);
+            actions.MoveToElement(driver.FindElement(By.Id("div2"))).Build().Perform();
+
+            Thread.Sleep(1000);
+            driver.Close();
         }
     }
 }
