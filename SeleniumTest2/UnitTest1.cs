@@ -2,6 +2,7 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.Events;
 using OpenQA.Selenium.Support.UI;
 using System;
@@ -21,7 +22,12 @@ namespace SeleniumTest2
         [Test]
         public void Test1()
         {
-            IWebDriver driver = new ChromeDriver();
+            //IWebDriver driver = new ChromeDriver();
+
+            var capabilities = new ChromeOptions().ToCapabilities();
+            //var commandTimeout = TimeSpan.FromMinutes(5);
+            RemoteWebDriver driver = new RemoteWebDriver(new Uri("http://10.0.0.135:4444"), capabilities);
+
             driver.Navigate().GoToUrl("http://eaapp.somee.com/");
             //driver.Navigate().GoToUrl("http://localhost:3000/");
 
@@ -53,9 +59,9 @@ namespace SeleniumTest2
             Assert.That(loginByCSS2.Displayed, Is.True);
 
             txtUserName.SendKeys("admin");
-            //txtPassword.SendKeys("password");
+            txtPassword.SendKeys("password");
             TimeSpan tspan = new TimeSpan(0, 0, 10);
-            SendKeysWithWait((ChromeDriver)driver, "Password", tspan, "password");
+            //SendKeysWithWait((ChromeDriver)driver, "Password", tspan, "password");
             Thread.Sleep(1000);
             rememberBox.Click();
             Thread.Sleep(1000);
@@ -129,6 +135,7 @@ namespace SeleniumTest2
             eventFiringWebDriver.ElementClicked += EventFiringWebDriver_ElementClicked;
 
             eventFiringWebDriver.FindElement(By.Id("alertexamples")).Click();
+            Thread.Sleep(1000);
             eventFiringWebDriver.SwitchTo().Alert().Accept();
             eventFiringWebDriver.Close();
         }
@@ -152,8 +159,13 @@ namespace SeleniumTest2
 
             Actions actions = new Actions(driver);
             actions.MoveToElement(driver.FindElement(By.Id("div2"))).Build().Perform();
-
             Thread.Sleep(1000);
+
+            actions.MoveToElement(driver.FindElement(By.Id("div2")), 10, 10, MoveToElementOffsetOrigin.TopLeft)
+                .ContextClick().MoveByOffset(20, 20).Click()
+                .Build().Perform();
+            Thread.Sleep(1000);
+
             driver.Close();
         }
     }
