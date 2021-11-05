@@ -24,9 +24,10 @@ namespace SeleniumTest2
         {
             //IWebDriver driver = new ChromeDriver();
 
-            var capabilities = new ChromeOptions().ToCapabilities();
-            //var commandTimeout = TimeSpan.FromMinutes(5);
-            RemoteWebDriver driver = new RemoteWebDriver(new Uri("http://10.0.0.135:4444"), capabilities);
+            var chromeOptions = new ChromeOptions();
+            //var capabilities = new ChromeOptions().ToCapabilities();
+            //RemoteWebDriver driver = new RemoteWebDriver(new Uri("http://10.0.0.135:4444"), capabilities);
+            IWebDriver driver = new RemoteWebDriver(new Uri("http://10.0.0.135:4444"), chromeOptions);
 
             driver.Navigate().GoToUrl("http://eaapp.somee.com/");
             //driver.Navigate().GoToUrl("http://localhost:3000/");
@@ -165,6 +166,8 @@ namespace SeleniumTest2
                 .ContextClick().MoveByOffset(20, 20).Click()
                 .Build().Perform();
             Thread.Sleep(1000);
+
+            ((ITakesScreenshot)driver).GetScreenshot().SaveAsFile("Test-Screenshot.png", ScreenshotImageFormat.Png);
 
             driver.Close();
         }
