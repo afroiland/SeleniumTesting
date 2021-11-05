@@ -22,12 +22,22 @@ namespace SeleniumTest2
         [Test]
         public void Test1()
         {
-            //IWebDriver driver = new ChromeDriver();
+            IWebDriver driver;
+            //RemoteWebDriver driver;
 
             var chromeOptions = new ChromeOptions();
             //var capabilities = new ChromeOptions().ToCapabilities();
-            //RemoteWebDriver driver = new RemoteWebDriver(new Uri("http://10.0.0.135:4444"), capabilities);
-            IWebDriver driver = new RemoteWebDriver(new Uri("http://10.0.0.135:4444"), chromeOptions);
+
+            //if the standalone server is running, use RemoteWebDriver, otherwise use ChromeDriver
+            try
+            {
+                driver = new RemoteWebDriver(new Uri("http://10.0.0.135:4444"), chromeOptions);
+                //driver = new RemoteWebDriver(new Uri("http://10.0.0.135:4444"), capabilities);
+            }
+            catch
+            {
+                driver = new ChromeDriver();
+            }
 
             driver.Navigate().GoToUrl("http://eaapp.somee.com/");
             //driver.Navigate().GoToUrl("http://localhost:3000/");
