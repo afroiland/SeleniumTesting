@@ -7,6 +7,8 @@ using OpenQA.Selenium.Support.Events;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Threading;
+using WebDriverManager;
+using WebDriverManager.DriverConfigs.Impl;
 
 namespace SeleniumTest2
 {
@@ -15,6 +17,8 @@ namespace SeleniumTest2
         [SetUp]
         public void Setup()
         {
+            new DriverManager().SetUpDriver(new ChromeConfig());
+
             //IWebDriver webDriver = new ChromeDriver();
             //webDriver.Navigate().GoToUrl("http://eaapp.somee.com/");
         }
@@ -31,6 +35,7 @@ namespace SeleniumTest2
             //if the standalone server is running, use RemoteWebDriver, otherwise use ChromeDriver
             try
             {
+                
                 driver = new RemoteWebDriver(new Uri("http://10.0.0.135:4444"), chromeOptions);
                 //driver = new RemoteWebDriver(new Uri("http://10.0.0.135:4444"), capabilities);
             }
